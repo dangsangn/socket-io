@@ -8,16 +8,16 @@ const io = require("socket.io")(PORT, {
 let users = [];
 
 const addUser = (userId, socketId) => {
-  !users.some((user) => user.userId === userId) &&
+  !users.some((user) => user?.userId === userId) &&
     users.push({ userId, socketId });
 };
 
 const removeUser = (socketId) => {
-  users = users.filter((user) => user.socketId !== socketId);
+  users = users.filter((user) => user?.socketId !== socketId);
 };
 
 const getUser = (userId) => {
-  return users.find((user) => user.userId === userId);
+  return users.find((user) => user?.userId === userId);
 };
 
 io.on("connection", (socket) => {
@@ -26,14 +26,14 @@ io.on("connection", (socket) => {
 
   //take userId and socketId from user
   socket.on("addUser", (userId) => {
-    addUser(userId, socket.id);
+    addUser(userId, socket?.id);
     io.emit("getUsers", users);
   });
 
   //send and get message
   socket.on("sendMessage", ({ sender, receiverId, content }) => {
     const user = getUser(receiverId);
-    io.to(user.socketId).emit("getMessage", {
+    io.to(user?.socketId).emit("getMessage", {
       sender,
       content,
     });
