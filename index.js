@@ -1,5 +1,12 @@
+var app = require("express")(),
+  http = require("http").Server(app),
+  io = require("socket.io")(http);
+
+app.get("/", (req, res) => {
+  res.send("i am socket!");
+});
 const PORT = process.env.PORT || 8900;
-const io = require("socket.io")(PORT, {
+io = require("socket.io")(PORT, {
   cors: {
     origin: "http://localhost:3000",
   },
@@ -45,4 +52,8 @@ io.on("connection", (socket) => {
     removeUser(socket.id);
     io.emit("getUsers", users);
   });
+});
+
+http.listen(PORT, function () {
+  console.log("listening on ", PORT);
 });
